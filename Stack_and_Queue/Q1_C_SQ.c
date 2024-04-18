@@ -8,7 +8,7 @@ Purpose: Implementing the required functions for Question 1 */
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <time.h>
 //////////////////////////////////////////////////////////////////////////////////
 
 typedef struct _listnode
@@ -53,6 +53,8 @@ int main()
 	LinkedList ll;
 	Queue q;
 
+	clock_t start, end;
+
 	c = 1;
 
 	// Initialize the linked list as an empty linked list
@@ -83,7 +85,14 @@ int main()
 			printList(&ll);
 			break;
 		case 2:
+
+			start = clock();
+			// 시간 측정을 실행할 함수..
 			createQueueFromLinkedList(&ll, &q); // You need to code this function
+			
+			end = clock();
+			printf("[time : %f]\n", (float)(end - start) / CLOCKS_PER_SEC);
+
 			printf("The resulting queue is: ");
 			printList(&(q.ll));
 			break;
@@ -112,12 +121,12 @@ int main()
 void createQueueFromLinkedList(LinkedList *ll, Queue *q)
 {
 	/* add your code here */
-	// 큐 비우기
 	ListNode *node = ll->head;
 	LinkedList *qList = &(q->ll);
-	ListNode *qNode = NULL;
-	qList->head = qNode;
-	qList->size = 0;
+	
+	// 큐 비우기
+	removeAllItemsFromQueue(q);
+	ListNode *qLastNode = NULL;
 
 	// 큐에 넣기
 	while (node != NULL)
@@ -128,21 +137,21 @@ void createQueueFromLinkedList(LinkedList *ll, Queue *q)
 		new_Node->next = NULL;
 
 		// 노드 삽입
-		if (qNode == NULL)
+		if (qLastNode == NULL)
 		{
 			qList->head = new_Node;
-			qNode = new_Node;
+			qLastNode = new_Node;
 		}
 		else
 		{
-			qNode->next = new_Node;
-			qNode = new_Node;
+			qLastNode->next = new_Node;
+			qLastNode = new_Node;
 		}
 		node = node->next;
 		qList->size++;
 	}
 }
-
+// 1 1 1 2 1 3 1 4 1 5 1 5 1 4 1 3 1 2 1 1 1 8 1 9 1 10 1 11 1 7 1 6 1 8 1 9 1 99 1 18
 void removeOddValues(Queue *q)
 {
 	/* add your code here */
